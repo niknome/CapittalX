@@ -1,0 +1,59 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+header {
+  width: 100%;
+}
+header img {
+  width: 80px;
+}
+
+.color_around_logo {
+  background: rgb(92, 27, 202);
+  background: linear-gradient(
+    0deg,
+    rgba(92, 27, 202, 1) 42%,
+    rgba(7, 73, 202, 1) 100%
+  );
+  padding-top: 10px;
+  padding-bottom: 50px;
+}
+.logo_cappitalx {
+  width: 100%;
+  background-color: #00002e;
+}
+
+.background_img {
+  background-image: url("./Images/backgrounHeader.jpg");
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-size: cover;
+  width: 100%;
+  height: 60vh;
+  border-radius: 0px 0px 40px 40px;
+}
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 60vh;
+  position: relative;
+  margin-bottom: 30px;
+}
+
+.container .overlay {
+  width: 100%;
+  height: 60vh;
+  opacity: 0.5;
+  background: black;
+  position: absolute;
+  border-radius: 0px 0px 40px 40px;
+}
+
+.texto {
+  /* top: 50%;
+  left: 50%; */
+  background-color: aqua;
+  position: absolute;
+}
