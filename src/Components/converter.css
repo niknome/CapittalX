@@ -7,32 +7,12 @@ p {
   font-size: 15px;
 }
 
-.OptionCoin img {
-  width: 25px;
-  padding: 0;
-  margin: 0%;
-}
-
-.From {
-  display: flex;
-  justify-content: center;
-}
-.To {
-  display: flex;
-  justify-content: center;
-}
-
-.OptionCoin {
-  display: flex;
-  justify-content: space-evenly;
-  align-items: center;
-}
-
 .Converter {
   display: flex;
   justify-content: center;
   align-items: center;
 }
+
 .Cointainer_converter {
   display: flex;
   justify-content: center;
@@ -41,12 +21,55 @@ p {
   height: 70vh;
   width: 50vw;
 }
+
+.Amount p {
+  color: gray;
+}
+
+.OptionCoin img {
+  width: 25px;
+  padding: 0;
+  margin: 0%;
+}
+
+.OptionCoin {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.To {
+  display: flex;
+  justify-content: center;
+}
+
+.From {
+  display: flex;
+  justify-content: center;
+}
+
 .inputs_coin {
   display: flex;
   justify-content: space-between;
   flex-direction: column;
   height: 30vh;
 }
+
+.Container_Inputs {
+  color: slateblue;
+  font-weight: bold;
+}
+
+.amount_and_info {
+  display: flex;
+  justify-content: space-between;
+  width: 47vw;
+}
+
+.Amount {
+  display: flex;
+}
+
 .Btn {
   display: flex;
   justify-content: flex-end;
@@ -55,21 +78,4 @@ p {
   height: 10vh;
   margin-right: 15px;
   padding-top: 50px;
-}
-
-.amount_and_info {
-  display: flex;
-  justify-content: space-between;
-  width: 47vw;
-}
-.Amount {
-  display: flex;
-}
-.Amount p {
-  color: gray;
-}
-
-.Container_Inputs {
-  color: slateblue;
-  font-weight: bold;
 }

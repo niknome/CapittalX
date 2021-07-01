@@ -45,8 +45,8 @@ const userCoinsAvailable = [
   }, 
 ]
 
-let estadoA
-let estadoB
+let currencyTo
+let currencyFrom
 
 let interval;
 
@@ -70,8 +70,6 @@ export default class Converter extends React.Component{
 
     aparecePorcentagem: false,
     dropDownPorcentagem: '',
-
-    disableInputs: false,
 
   }
 
@@ -118,13 +116,12 @@ export default class Converter extends React.Component{
   handleChangeInputTo = (event) => {
     this.setState({inputValueTo: event.target.value})
 
-    this.funcaoNova(event.target.value)
+    this.converterCurrency(event.target.value)
 
   }
  
   handleChangeInputFrom = (event) => {
      this.setState({inputValueFrom: event.target.value})
-  
     
   }  
 
@@ -138,7 +135,7 @@ export default class Converter extends React.Component{
     const pegueiAmount = {...this.state.avaibleAmout}
       this.setState({inputValueTo: pegueiAmount.amount})  
 
-    this.funcaoNova(pegueiAmount.amount)
+    this.converterCurrency(pegueiAmount.amount)
   }
 
   updateCountDown = () =>{
@@ -156,6 +153,8 @@ export default class Converter extends React.Component{
  buttonsChangeAndStartCountDown = () => {
    this.setState({changeButtons: !this.state.changeButtons})
    interval = setInterval(this.updateCountDown, 1000)
+
+   this.converterCurrency();
  }
 
  handleChangeSelect = (event) => {
@@ -166,55 +165,53 @@ export default class Converter extends React.Component{
 
   switch(event.target.value){
     case '5%':
-      const result5 = this.state.avaibleAmout.amount * (5/100)
-      this.funcaoNova(result5)
-      return this.setState({inputValueTo: result5})
+      const percentage5 = this.state.avaibleAmout.amount * (5/100)
+      this.converterCurrency(percentage5)
+      return this.setState({inputValueTo: percentage5})
 
     case '25%':
-      const result25 = this.state.avaibleAmout.amount * (25/100)
-      this.funcaoNova(result25)
-      return this.setState({inputValueTo: result25})
+      const percentage25 = this.state.avaibleAmout.amount * (25/100)
+      this.converterCurrency(percentage25)
+      return this.setState({inputValueTo: percentage25})
 
     case '50%':
-      const result50 = this.state.avaibleAmout.amount * (50/100)
-      this.funcaoNova(result50)
-      return this.setState({inputValueTo: result50}) 
+      const percentage50 = this.state.avaibleAmout.amount * (50/100)
+      this.converterCurrency(percentage50)
+      return this.setState({inputValueTo: percentage50}) 
 
     case '75%':
-      const result75 = this.state.avaibleAmout.amount * (75/100)
-      this.funcaoNova(result75)
-      return this.setState({inputValueTo: result75})
+      const percentage75 = this.state.avaibleAmout.amount * (75/100)
+      this.converterCurrency(percentage75)
+      return this.setState({inputValueTo: percentage75})
 
     case '100%':
-      const result100 = this.state.avaibleAmout.amount * (100/100)
-      this.funcaoNova(result100)
-      return this.setState({inputValueTo: result100})                      
+      const percentage100 = this.state.avaibleAmout.amount * (100/100)
+      this.converterCurrency(percentage100)
+      return this.setState({inputValueTo: percentage100})                      
     }
 
-    this.funcaoNova()
+    this.converterCurrency()
  }
 
-
- funcaoNova = (evento) =>{
+ converterCurrency = (event) =>{
 
   this.state.currencyOptions.filter(val =>{
     if(val.coin === this.state.dropDownTo.coin || val.coin === this.state.dropDownTo.valueCoinApi){
-     return estadoA = ((parseFloat(val.lastPrice.replace(/\./g,'').replace(',', '.')) * evento))
+     return currencyTo = ((parseFloat(val.lastPrice.replace(/\./g,'').replace(',', '.')) * event))
     }
   })
 
   this.state.currencyOptions.filter(val =>{
     if(val.coin === this.state.dropDownFrom){
-        estadoB = ((parseFloat(val.lastPrice.replace(/\./g,'').replace(',', '.'))))
+        currencyFrom = ((parseFloat(val.lastPrice.replace(/\./g,'').replace(',', '.'))))
     }
   })
 
-  this.setState({inputValueFrom: estadoA / estadoB})
+  this.setState({inputValueFrom: currencyTo / currencyFrom})
  }
 
-render(){
 
-  console.log(this.state.currencyOptions)
+render(){
 
   const filterSelect = this.state.currencyOptions.filter(value =>{
     if(value.coin !== this.state.dropDownTo.coin){
@@ -222,7 +219,7 @@ render(){
     }
   })
 
-  let aparecePorcentagemSim = this.state.aparecePorcentagem ?  (
+  let showsPercentage = this.state.aparecePorcentagem ?  (
    <select
    value={this.state.dropDownPorcentagem}
    onChange={this.handleChangeSelect}>
@@ -249,7 +246,7 @@ return(
 
   <div className="Cointainer_converter">      
 
-    <div>{aparecePorcentagemSim}</div>
+    <div>{showsPercentage}</div>
           
       <div className="inputs_coin">
            
@@ -268,7 +265,6 @@ return(
 
             <div className="To">  
                <InputAmount
-               disabled={this.state.disableInputs}
                placeholder="Por favor, insira 20-250000000000"
                endAdornment={<InputAdornment position="end" onClick={this.onClickMaxValue}>MAX</InputAdornment>}
                className="input"
@@ -276,7 +272,6 @@ return(
                onChange={this.handleChangeInputTo} />
  
               <SelectCrypto variant="outlined"
-               disabled={this.state.disableInputs}
                onClick={this.onclickSelectTo}
                className="select"
                value={this.state.dropDownTo}
@@ -293,13 +288,11 @@ return(
 
            <div className="From">
               <InputAmount
-               disabled={this.state.disableInputs}
               className="input" 
               value={this.state.inputValueFrom} 
               onChange={this.handleChangeInputFrom} />
 
               <SelectCrypto
-               disabled={this.state.disableInputs}
               variant="outlined"
               className="select" 
               value={this.state.dropDownFrom} 

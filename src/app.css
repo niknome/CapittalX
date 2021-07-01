@@ -24,15 +24,6 @@ header img {
   background-color: #00002e;
 }
 
-.background_img {
-  background-image: url("./Images/backgrounHeader.jpg");
-  background-attachment: fixed;
-  background-repeat: no-repeat;
-  background-size: cover;
-  width: 100%;
-  height: 60vh;
-  border-radius: 0px 0px 40px 40px;
-}
 .container {
   display: flex;
   justify-content: center;
@@ -41,6 +32,16 @@ header img {
   position: relative;
   margin-bottom: 30px;
   text-align: center;
+}
+
+.background_img {
+  background-image: url("./Images/backgrounHeader.jpg");
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-size: cover;
+  width: 100%;
+  height: 60vh;
+  border-radius: 0px 0px 40px 40px;
 }
 
 .container .overlay {
