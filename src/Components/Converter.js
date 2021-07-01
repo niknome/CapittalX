@@ -27,6 +27,7 @@ const Buttons = styled(Button)({
 const userCoinsAvailable = [
   {
     coin: "USDT",
+    valueCoinApi: "USDC",
     amount: "10",
     icon: "https://s2.coinmarketcap.com/static/img/coins/64x64/825.png"
   },{
@@ -71,8 +72,6 @@ export default class Converter extends React.Component{
     dropDownPorcentagem: '',
 
     disableInputs: false,
-
-   /*    */
 
   }
 
@@ -156,7 +155,7 @@ export default class Converter extends React.Component{
 
  buttonsChangeAndStartCountDown = () => {
    this.setState({changeButtons: !this.state.changeButtons})
-   interval = setInterval(this.updateCountDown, 100)
+   interval = setInterval(this.updateCountDown, 1000)
  }
 
  handleChangeSelect = (event) => {
@@ -199,7 +198,7 @@ export default class Converter extends React.Component{
  funcaoNova = (evento) =>{
 
   this.state.currencyOptions.filter(val =>{
-    if(val.coin === this.state.dropDownTo.coin){
+    if(val.coin === this.state.dropDownTo.coin || val.coin === this.state.dropDownTo.valueCoinApi){
      return estadoA = ((parseFloat(val.lastPrice.replace(/\./g,'').replace(',', '.')) * evento))
     }
   })
@@ -214,6 +213,8 @@ export default class Converter extends React.Component{
  }
 
 render(){
+
+  console.log(this.state.currencyOptions)
 
   const filterSelect = this.state.currencyOptions.filter(value =>{
     if(value.coin !== this.state.dropDownTo.coin){
