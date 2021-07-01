@@ -8,14 +8,14 @@ import MenuItem from '@material-ui/core/MenuItem';
 import OutlinedInput from '@material-ui/core/OutlinedInput';
 import Button from '@material-ui/core/Button';
 
-
+/* Estilização dos inputs/seletores/botoes */
 const InputAmount = styled(OutlinedInput)({
   height: 55,
-  width: 600,
+  width: 600
 })
 const SelectCrypto = styled(Select)({
   height: 55,
-  width: 150
+  width: 150,
 })
 
 const Buttons = styled(Button)({
@@ -27,7 +27,7 @@ const Buttons = styled(Button)({
 const userCoinsAvailable = [
   {
     coin: "USDT",
-    valueCoinApi: "USDC",
+    valueCoinApi: "USDC",  // apenas para que reconheça o valor do usdt (são os mesmos valores..)
     amount: "10",
     icon: "https://s2.coinmarketcap.com/static/img/coins/64x64/825.png"
   },{
@@ -45,30 +45,35 @@ const userCoinsAvailable = [
   }, 
 ]
 
-let currencyTo
-let currencyFrom
 
-let interval;
+let interval; // criar uma variavel global foi
+              // a forma que utilizei para conseguir fazer
+              // com que eu utilizasse o clearInterval e
+              // parar o cronometro no "0"
 
-let time = 10 * 60;
+let time = 10 * 60; // criar uma variavel global foi
+                    // a forma que utilizei para contar os segundos dentro da
+                    // função updateCountDown
 
 export default class Converter extends React.Component{
   state = {
-    currencyOptions: [],
+    currencyOptions: [], // estado guarda os dados das criptos vindos da API
 
-    dropDownTo: '',
-    dropDownFrom: '',
+    dropDownTo: '',  
+    dropDownFrom: '', 
 
-    inputValueTo: '',
-    inputValueFrom: '',
+    inputValueTo: '', 
+    inputValueFrom: '', 
 
-    avaibleAmout: [],
+    avaibleAmout: [],  // guarda informações sobre quantidade disponivel do user
+                       // em cada opção do select "DE"
+                    
 
-    countDownEl:  60,
-    changeButtons: true,
-    changeConfirm: 'CONFIRMAR OPERAÇÃO',
+    countDownEl:  60,  // segundos do timer
+    changeButtons: true, 
+    changeConfirm: 'CONFIRMAR OPERAÇÃO', 
 
-    aparecePorcentagem: false,
+    showsPercentages: false,
     dropDownPorcentagem: '',
 
   }
@@ -76,7 +81,9 @@ export default class Converter extends React.Component{
   componentDidMount() {
     this.createToken()
   }
-
+   
+  /* Função na qual ao entrar no site, um novo token é gerado, preenchendo
+  o token no EndPoint que cria os tokens jwt */
   createToken = () =>{
     const body = {
       email: 'desafio@cpx.com',
@@ -115,16 +122,15 @@ export default class Converter extends React.Component{
 
   handleChangeInputTo = (event) => {
     this.setState({inputValueTo: event.target.value})
-
+   
     this.converterCurrency(event.target.value)
-
   }
  
   handleChangeInputFrom = (event) => {
      this.setState({inputValueFrom: event.target.value})
-    
+     
   }  
-
+  
   onclickSelectTo = (event) => {
       if(event.target.value){
         this.setState({avaibleAmout: event.target.value})
@@ -157,9 +163,9 @@ export default class Converter extends React.Component{
    this.converterCurrency();
  }
 
- handleChangeSelect = (event) => {
+ handleChangeSelectPercentage = (event) => {
   this.setState({dropDownPorcentagem: event.target.value})
-  this.setState({aparecePorcentagem: !this.state.aparecePorcentagem})
+  this.setState({showsPercentages: !this.state.showsPercentages})
 
 
 
@@ -194,35 +200,38 @@ export default class Converter extends React.Component{
  }
 
  converterCurrency = (event) =>{
+   let currencyTo
+   let currencyFrom
 
   this.state.currencyOptions.filter(val =>{
     if(val.coin === this.state.dropDownTo.coin || val.coin === this.state.dropDownTo.valueCoinApi){
-     return currencyTo = ((parseFloat(val.lastPrice.replace(/\./g,'').replace(',', '.')) * event))
+      currencyTo = ((parseFloat(val.lastPrice.replace(/\./g,'').replace(',', '.')) * event))
     }
-  })
+  }) 
 
   this.state.currencyOptions.filter(val =>{
     if(val.coin === this.state.dropDownFrom){
-        currencyFrom = ((parseFloat(val.lastPrice.replace(/\./g,'').replace(',', '.'))))
+      currencyFrom = ((parseFloat(val.lastPrice.replace(/\./g,'').replace(',', '.'))))
     }
-  })
+  })  
 
   this.setState({inputValueFrom: currencyTo / currencyFrom})
  }
 
 
 render(){
-
+  /* Condicional para fazer com que o a cripto não se repita no select do "PARA" */
   const filterSelect = this.state.currencyOptions.filter(value =>{
     if(value.coin !== this.state.dropDownTo.coin){
       return <SelectCrypto><MenuItem value={value.coin}>{value.coin}</MenuItem></SelectCrypto>
     }
   })
 
-  let showsPercentage = this.state.aparecePorcentagem ?  (
+  /* Condicional para mostrar ou não percentage */
+  let showsPercentage = this.state.showsPercentages ?  (
    <select
    value={this.state.dropDownPorcentagem}
-   onChange={this.handleChangeSelect}>
+   onChange={this.handleChangeSelectPercentage}>
      <option defaultValue> Percentage </option>
      <option>5%</option>
      <option>25%</option>
@@ -232,7 +241,7 @@ render(){
    </select>
   ) : false
  
-
+  /* Condicional para troca de botoes */
   let myButtonsToShow = this.state.changeButtons ? (
       <Buttons onClick={this.buttonsChangeAndStartCountDown} variant="contained" size="large" color="primary">SIMULAR</Buttons>
   ) : (<div>
@@ -259,14 +268,14 @@ return(
 
                 <div className="Amount">
                 <p>Disponivel:</p>
-                <p onClick={this.handleChangeSelect}>{this.state.avaibleAmout.amount} {this.state.avaibleAmout.coin}</p>
+                <p onClick={this.handleChangeSelectPercentage}>{this.state.avaibleAmout.amount} {this.state.avaibleAmout.coin}</p>
                 </div>
               </div>
 
             <div className="To">  
                <InputAmount
                placeholder="Por favor, insira 20-250000000000"
-               endAdornment={<InputAdornment position="end" onClick={this.onClickMaxValue}>MAX</InputAdornment>}
+               endAdornment={<InputAdornment position="end" onClick={this.onClickMaxValue}>MÁX</InputAdornment>}
                className="input"
                value={this.state.inputValueTo} 
                onChange={this.handleChangeInputTo} />
