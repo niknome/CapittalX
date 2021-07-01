@@ -77,26 +77,35 @@ export default class Converter extends React.Component{
   }
 
   componentDidMount() {
-    this.takeCurrency();
-    
+    this.createToken()
   }
 
-  takeCurrency = () => {
-    const token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2FwaWNoYWluLmNhcGl0dGFseC5jb20vYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE2MjUwOTI4NDUsImV4cCI6MTYyNTA5NjQ0NSwibmJmIjoxNjI1MDkyODQ1LCJqdGkiOiJ2SVJ6Zmp1UTdUeUZZZll5Iiwic3ViIjo1LCJwcnYiOiI4N2UwYWYxZWY5ZmQxNTgxMmZkZWM5NzE1M2ExNGUwYjA0NzU0NmFhIn0.bblj9mXsATJMs3lq19GvNbRmtzfJG4Qxeo4p5JV7bUE"
-    axios.get(`https://apichain.capittalx.com/api/all`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`
+  createToken = () =>{
+    const body = {
+      email: 'desafio@cpx.com',
+      password: 'zaxscd@Q1W2E3'
+    }
+    axios.post(`https://apichain.capittalx.com/api/auth/login`, body, {
+
+    }).then((res) => {
+      axios.get(`https://apichain.capittalx.com/api/all`,
+          {
+            headers: {
+              Authorization: `Bearer ${res.data.token}`
+            }
           }
-        }
-      )
-      .then((response) => {
-        this.setState({currencyOptions: response.data})
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
+        )
+        .then((response) => {
+          this.setState({currencyOptions: response.data})
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }). catch((error) => {
+      console.log(error.res.data)
+    })
+  }
+
 
   handleChangeDropDownTo = (event) =>{
     this.setState({dropDownTo: event.target.value})
@@ -205,8 +214,6 @@ export default class Converter extends React.Component{
  }
 
 render(){
-
-  console.log(this.state.dropDownPorcentagem)
 
   const filterSelect = this.state.currencyOptions.filter(value =>{
     if(value.coin !== this.state.dropDownTo.coin){
