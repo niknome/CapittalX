@@ -76,6 +76,7 @@ export default class Converter extends React.Component{
     showsPercentages: false,
     dropDownPorcentagem: '',
 
+    disabled: false
   }
 
   componentDidMount() {
@@ -124,6 +125,7 @@ export default class Converter extends React.Component{
     this.setState({inputValueTo: event.target.value})
    
     this.converterCurrency(event.target.value)
+
   }
  
   handleChangeInputFrom = (event) => {
@@ -153,14 +155,21 @@ export default class Converter extends React.Component{
       clearInterval(interval)
       this.setState({changeConfirm: 'REFAZER OPERAÇÃO'})
     }
-  
+    
+    this.disableInputs()
+  }
+
+  disableInputs = () =>{
+    if(this.state.countDownEl >= 1 && this.state.countDownEl < 60){
+      this.setState({disabled: true})
+    } else{
+      this.setState({disabled: false})
+    }
   }
 
  buttonsChangeAndStartCountDown = () => {
    this.setState({changeButtons: !this.state.changeButtons})
-   interval = setInterval(this.updateCountDown, 1000)
-
-   this.converterCurrency();
+   interval = setInterval(this.updateCountDown, 100)
  }
 
  handleChangeSelectPercentage = (event) => {
@@ -196,12 +205,12 @@ export default class Converter extends React.Component{
       return this.setState({inputValueTo: percentage100})                      
     }
 
-    this.converterCurrency()
+    // this.converterCurrency()
  }
 
  converterCurrency = (event) =>{
-   let currencyTo
-   let currencyFrom
+  let currencyTo
+  let currencyFrom
 
   this.state.currencyOptions.filter(val =>{
     if(val.coin === this.state.dropDownTo.coin || val.coin === this.state.dropDownTo.valueCoinApi){
@@ -215,11 +224,23 @@ export default class Converter extends React.Component{
     }
   })  
 
-  this.setState({inputValueFrom: currencyTo / currencyFrom})
+   this.setState({inputValueFrom: currencyTo / currencyFrom})
+  
  }
 
+ref = () =>{
+ this.setState({changeButtons: true})
+ this.setState({inputValueTo: ''})
+ this.setState({inputValueFrom: ''})
+}
 
 render(){
+
+  /* Se for NaN o input from fica em branco */
+  if(isNaN(this.state.inputValueFrom) || this.state.inputValueFrom === 0){
+    this.setState({inputValueFrom: ''})
+  }
+ 
   /* Condicional para fazer com que o a cripto não se repita no select do "PARA" */
   const filterSelect = this.state.currencyOptions.filter(value =>{
     if(value.coin !== this.state.dropDownTo.coin){
@@ -229,10 +250,11 @@ render(){
 
   /* Condicional para mostrar ou não percentage */
   let showsPercentage = this.state.showsPercentages ?  (
-   <select
+   <select 
+   disabled={this.state.disabled}
    value={this.state.dropDownPorcentagem}
    onChange={this.handleChangeSelectPercentage}>
-     <option defaultValue> Percentage </option>
+     <option defaultValue> Porcentagem </option>
      <option>5%</option>
      <option>25%</option>
      <option>50%</option>
@@ -245,7 +267,7 @@ render(){
   let myButtonsToShow = this.state.changeButtons ? (
       <Buttons onClick={this.buttonsChangeAndStartCountDown} variant="contained" size="large" color="primary">SIMULAR</Buttons>
   ) : (<div>
-      <Buttons variant="contained" size="large" color="primary">{this.state.changeConfirm}</Buttons>
+      <Buttons onClick={this.ref}variant="contained" size="large" color="primary">{this.state.changeConfirm}</Buttons>
       <Buttons variant="contained" size="large" color="primary">{this.state.countDownEl} segundos</Buttons>
      </div>)
 
@@ -255,7 +277,7 @@ return(
 
   <div className="Cointainer_converter">      
 
-    <div>{showsPercentage}</div>
+     <div className="percentage">{showsPercentage}</div>
           
       <div className="inputs_coin">
            
@@ -271,9 +293,10 @@ return(
                 <p onClick={this.handleChangeSelectPercentage}>{this.state.avaibleAmout.amount} {this.state.avaibleAmout.coin}</p>
                 </div>
               </div>
-
+           
             <div className="To">  
                <InputAmount
+               disabled={this.state.disabled}
                placeholder="Por favor, insira 20-250000000000"
                endAdornment={<InputAdornment position="end" onClick={this.onClickMaxValue}>MÁX</InputAdornment>}
                className="input"
@@ -281,6 +304,7 @@ return(
                onChange={this.handleChangeInputTo} />
  
               <SelectCrypto variant="outlined"
+              disabled={this.state.disabled}
                onClick={this.onclickSelectTo}
                className="select"
                value={this.state.dropDownTo}
@@ -297,11 +321,13 @@ return(
 
            <div className="From">
               <InputAmount
+              disabled={this.state.disabled}
               className="input" 
               value={this.state.inputValueFrom} 
               onChange={this.handleChangeInputFrom} />
 
               <SelectCrypto
+              disabled={this.state.disabled}
               variant="outlined"
               className="select" 
               value={this.state.dropDownFrom} 
